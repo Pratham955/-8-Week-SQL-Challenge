@@ -281,6 +281,6 @@ FROM cte
 ***
 
 
-Click [here]((https://github.com/Pratham955/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
+Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
 
 
