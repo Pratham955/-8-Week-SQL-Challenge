@@ -11,6 +11,7 @@ VALUES
   (3, '2021-01-08'),
   (4, '2021-01-15');
 ``` 
+![image](https://user-images.githubusercontent.com/75075887/216662357-e438e227-7527-465e-bc76-c8c227d33e67.png)
 
 ## Customer Orders Table
 ```sql
@@ -40,6 +41,7 @@ VALUES
   ('10', '104', '1', 'null', 'null', '2020-01-11 18:34:49'),
   ('10', '104', '1', '2, 6', '1, 4', '2020-01-11 18:34:49');
 ```
+![image](https://user-images.githubusercontent.com/75075887/216662782-7f8de162-cb96-463e-b464-40138fe80317.png)
 
 ## Runner Orders Table
 ```sql
@@ -65,6 +67,7 @@ VALUES
   ('9', '2', 'null', 'null', 'null', 'Customer Cancellation'),
   ('10', '1', '2020-01-11 18:50:20', '10km', '10minutes', 'null');
 ```
+![image](https://user-images.githubusercontent.com/75075887/216662964-0c9602ad-6542-4bc8-8ed4-8186227ff156.png)
 
 ## Pizza Names Table
 ```sql
@@ -77,6 +80,7 @@ VALUES
   (1, 'Meatlovers'),
   (2, 'Vegetarian');
 ```
+![image](https://user-images.githubusercontent.com/75075887/216663098-8221299e-87a3-4b39-955e-c6bc4e5ae1ac.png)
 
 ## Pizza Recipes Table
 ```sql
@@ -89,6 +93,7 @@ VALUES
   (1, '1, 2, 3, 4, 5, 6, 8, 10'),
   (2, '4, 6, 7, 9, 11, 12');
 ```
+![image](https://user-images.githubusercontent.com/75075887/216663192-1bca572f-f936-418d-9768-c479fb231bc6.png)
 
 ## Pizza Toppings Table
 ```sql
@@ -111,6 +116,7 @@ VALUES
   (11, 'Tomatoes'),
   (12, 'Tomato Sauce');
 ```
+![image](https://user-images.githubusercontent.com/75075887/216663278-e63a3783-7195-4f92-bab3-2dd0ecc5d993.png)
 
 
 
