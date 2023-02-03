@@ -7,7 +7,7 @@ View the case study [here](https://8weeksqlchallenge.com/case-study-1/)
 ## 📚 Table of Contents
 - [Business Task](#business-task)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
-- [Key learning points](#key-learning-points)
+- [Key learnings](#key-learnings)
   
 ***
 
@@ -18,7 +18,7 @@ Danny wants to use the data to answer a few simple questions about his customers
 
 ![image](https://user-images.githubusercontent.com/81607668/127271130-dca9aedd-4ca9-4ed8-b6ec-1e1920dca4a8.png)
 
-## Key learnings points
+## Key learnings
 - Using window function **DENSE_RANK** along with PARTITION BY and ORDER BY clauses
 - Using **PARTITION BY** with multiple columns
   
