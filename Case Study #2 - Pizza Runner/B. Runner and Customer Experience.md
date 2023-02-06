@@ -143,4 +143,5 @@ ORDER BY 1
 ![image](https://user-images.githubusercontent.com/75075887/216782060-e1adae2d-a286-4831-8459-29523d110789.png)
 
 ***
-Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md) to view the  solution of C. Ingredient Optimisation!
+Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md) to view the  solution of C. Ingredient Optimisation!
+
