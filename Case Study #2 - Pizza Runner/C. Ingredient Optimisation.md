@@ -154,7 +154,58 @@ ORDER BY 1
  - For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
 
 ````sql
+WITH cte1 AS 
+( SELECT 
+	order_id,
+	customer_id,
+	STRING_AGG(DISTINCT topping_name, ', ') AS topping_name
+  FROM t1
+  INNER JOIN pizza_toppings ON t1.sep_exclusions = pizza_toppings.topping_id
+  GROUP BY 1,2
+)
 
+,cte2 AS 
+( SELECT 
+  	order_id, 
+  	customer_id,
+  	STRING_AGG(topping_name, ', ') AS topping_name
+  FROM t2
+  INNER JOIN pizza_toppings ON t2.sep_extras = pizza_toppings.topping_id
+  GROUP BY 1,2
+)
+
+, cte AS 
+( SELECT 
+	pizza_id,
+	STRING_AGG(topping_name,', ') AS topping_name
+  FROM pizza_recipes_temp
+  INNER JOIN pizza_toppings ON pizza_recipes_temp.toppings = pizza_toppings.topping_id
+  GROUP BY 1
+)
+
+SELECT 
+	customer_orders.order_id,
+	customer_orders.customer_id,
+	exclusions,
+	extras,
+	pizza_id,
+	CASE WHEN exclusions IS NULL AND extras IS NULL THEN CONCAT(pizza_name,': ',cte.topping_name)
+		 WHEN exclusions IS NOT NULL AND extras IS NULL THEN CONCAT(pizza_name,': ',REPLACE(cte.topping_name,CONCAT(cte1.topping_name,', '),''))
+		 WHEN exclusions IS NULL AND extras IS NOT NULL THEN 
+		 CASE WHEN strpos( cte.topping_name, cte2.topping_name) > 0 THEN CONCAT(pizza_name,': ',REPLACE(cte.topping_name,cte2.topping_name,CONCAT('2x',cte2.topping_name)))
+		 ELSE CONCAT(pizza_name,': ',cte.topping_name,', ',cte2.topping_name)
+		 END
+	ELSE 
+		CASE WHEN cte1.topping_name LIKE '%,%' THEN REPLACE(REPLACE(CONCAT(pizza_name,': ',REPLACE(REPLACE(cte.topping_name,CONCAT(SPLIT_PART(cte1.topping_name,',',1),', '),''),CONCAT(SPLIT_PART(cte1.topping_name,',',2),','),'')),SPLIT_PART(cte2.topping_name,',',1),CONCAT('2x',SPLIT_PART(cte2.topping_name,',',1))),SPLIT_PART(cte2.topping_name,',',2),CONCAT(' 2x',LTRIM(SPLIT_PART(cte2.topping_name,',',2))))
+		ELSE REPLACE(REPLACE(CONCAT(pizza_name,': ',REPLACE(cte.topping_name,CONCAT(cte1.topping_name,', '),'')),SPLIT_PART(cte2.topping_name,',',1),CONCAT('2x',SPLIT_PART(cte2.topping_name,',',1))),SPLIT_PART(cte2.topping_name,',',2),CONCAT(' 2x',LTRIM(SPLIT_PART(cte2.topping_name,',',2))))
+		END 
+	END AS order_item
+FROM customer_orders
+INNER JOIN cte USING(pizza_id)
+INNER JOIN pizza_names USING(pizza_id)
+LEFT JOIN cte1 ON customer_orders.order_id = cte1.order_id AND customer_orders.customer_id = cte1.customer_id
+LEFT JOIN cte2 ON customer_orders.order_id = cte2.order_id AND customer_orders.customer_id = cte2.customer_id
+ORDER BY 1
 ````
 
 #### Result set:
