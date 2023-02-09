@@ -2,7 +2,8 @@
 
 ## Solution - C. Ingredient Optimisation
 
-### pizza_recipes_temp: Temporary table for Q1
+### Temporary tables created to solve the below queries
+**1. pizza_recipes_temp:** Splitting the character type "**toppings**" column values into rows of integer datatype for joining.  
 
 ````sql
 CREATE TEMPORARY TABLE pizza_recipes_temp AS
@@ -16,6 +17,35 @@ FROM pizza_recipes
 
 ![image](https://user-images.githubusercontent.com/75075887/216979723-bf248eda-b057-4a69-8249-d7c63d0be0cd.png)
 
+**2. t1:** Extracting the order_id, customer_id, and exclusions (as integer) from the customer_orders table. 
+
+```sql
+CREATE TEMPORARY TABLE t1 
+( SELECT 
+  	order_id, 
+	customer_id,
+	regexp_split_to_table(exclusions, ',')::INT AS sep_exclusions
+  FROM customer_orders
+)
+```
+
+### Result set:
+![image](https://user-images.githubusercontent.com/75075887/217877213-dbf1f0be-611d-44d0-a24c-e2d8988edb5c.png)
+
+**3. t2:** Extracting the order_id, customer_id, and extras (as integer) from the customer_orders table. 
+
+```sql
+CREATE TEMPORARY TABLE t1 
+( SELECT 
+  	order_id, 
+	customer_id,
+	regexp_split_to_table(exclusions, ',')::INT AS sep_exclusions
+  FROM customer_orders
+)
+```
+
+### Result set:
+![image](https://user-images.githubusercontent.com/75075887/217878070-b5bcde47-b50a-4048-8b9c-7a3df9f9c6b1.png)
 
 ### 1. What are the standard ingredients for each pizza?
 
@@ -37,17 +67,11 @@ GROUP BY 1
 ### 2. What was the most commonly added extra?
 
 ````sql
-WITH cte AS 
-(   SELECT 
-    unnest(string_to_array(extras, ','))::INT AS topping_id
-    FROM customer_orders
-)
-
 SELECT 
-  topping_name, 
-  COUNT(*) AS frequency
-FROM CTE
-INNER JOIN pizza_toppings USING(topping_id)
+	topping_name AS sep_extras, 
+	COUNT(*) AS frequency
+FROM t2
+INNER JOIN pizza_toppings ON t2.sep_extras = pizza_toppings.topping_id
 GROUP BY 1
 ORDER BY 2 DESC
 LIMIT 1
@@ -61,24 +85,18 @@ LIMIT 1
 ### 3. What was the most common exclusion?
 
 ````sql
-WITH cte AS 
-(	SELECT 
-		unnest(string_to_array(exclusions, ','))::INT AS topping_id
-	FROM customer_orders
-)
-
 SELECT 
-	topping_name, 
+	topping_name AS exclusion, 
 	COUNT(*) AS frequency
-FROM CTE
-INNER JOIN pizza_toppings USING(topping_id)
+FROM t1
+INNER JOIN pizza_toppings ON t1.sep_exclusions = pizza_toppings.topping_id
 GROUP BY 1
 ORDER BY 2 DESC
 LIMIT 1
 ````
 
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216985166-253f14b0-ba85-4fce-b4bb-5c64bb2119ab.png)
+![image](https://user-images.githubusercontent.com/75075887/217879392-0652cff6-7940-4312-b74d-150f603ba96d.png)
 
 
 ### 4. Generate an order item for each record in the customers_orders table in the format of one of the following:
