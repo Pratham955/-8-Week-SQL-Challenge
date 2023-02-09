@@ -3,7 +3,7 @@
 ## Solution - C. Ingredient Optimisation
 
 ### Temporary tables created to solve the below queries
-**1. pizza_recipes_temp:** Splitting the character type "**toppings**" column values into rows of integer datatype for joining.  
+-  **pizza_recipes_temp:** Splitting the character type "**toppings**" column values into rows of integer datatype for joining.  
 
 ````sql
 CREATE TEMPORARY TABLE pizza_recipes_temp AS
@@ -17,7 +17,7 @@ FROM pizza_recipes
 
 ![image](https://user-images.githubusercontent.com/75075887/216979723-bf248eda-b057-4a69-8249-d7c63d0be0cd.png)
 
-**2. t1:** Extracting the order_id, customer_id, and exclusions (as integer) from the customer_orders table. 
+- **t1:** Extracting the order_id, customer_id, and exclusions (as integer) from the customer_orders table. 
 
 ```sql
 CREATE TEMPORARY TABLE t1 
@@ -32,20 +32,20 @@ CREATE TEMPORARY TABLE t1
 ### Result set:
 ![image](https://user-images.githubusercontent.com/75075887/217877213-dbf1f0be-611d-44d0-a24c-e2d8988edb5c.png)
 
-**3. t2:** Extracting the order_id, customer_id, and extras (as integer) from the customer_orders table. 
+- **t2:** Extracting the order_id, customer_id, and extras (as integer) from the customer_orders table. 
 
 ```sql
-CREATE TEMPORARY TABLE t1 
+CREATE TEMPORARY TABLE t2 AS
 ( SELECT 
-  	order_id, 
-	customer_id,
-	regexp_split_to_table(exclusions, ',')::INT AS sep_exclusions
+	  order_id, 
+	  customer_id,
+	  regexp_split_to_table(extras, ',')::INT AS sep_extras
   FROM customer_orders
 )
 ```
 
 ### Result set:
-![image](https://user-images.githubusercontent.com/75075887/217878070-b5bcde47-b50a-4048-8b9c-7a3df9f9c6b1.png)
+![image](https://user-images.githubusercontent.com/75075887/217880168-6f182a6c-034e-4d99-9498-ae3980234dfc.png)
 
 ### 1. What are the standard ingredients for each pizza?
 
@@ -105,36 +105,9 @@ LIMIT 1
 - Meat Lovers - Extra Bacon
 - Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
 
-#### Temporary Tables t1 
-```sql
-CREATE TEMPORARY TABLE t1 AS
-(   SELECT 
-      order_id, 
-      customer_id,
-      unnest(string_to_array(exclusions, ','))::INT AS sep_exclusions
-    FROM customer_orders
-)
-```
-#### Result set:
-![image](https://user-images.githubusercontent.com/75075887/217000629-87caebf2-62f9-485c-baef-686c65f7408f.png)
-
-
-#### Temporary Tables t2
-```sql
-CREATE TEMPORARY TABLE t2 AS
-(   SELECT 
-      order_id, 
-      customer_id,
-      regexp_split_to_table(extras, ',')::INT AS sep_extras
-    FROM customer_orders
-) 
-
-```
-#### Result set:
-![image](https://user-images.githubusercontent.com/75075887/217000762-16068507-32f9-4261-8417-340fe8860be7.png)
-
-
 ````sql
+-- cte 1 is for extracting the order_id, customer_id, and aggregated topping_name of exclusions by joining t1 and pizza_toppings.
+
 WITH cte1 AS 
 (   SELECT 
       order_id,
@@ -144,6 +117,8 @@ WITH cte1 AS
     INNER JOIN pizza_toppings ON t1.sep_exclusions = pizza_toppings.topping_id
     GROUP BY 1,2
 )
+
+-- cte 2 is for extracting the order_id, customer_id, and aggregated topping_name of extras by joining t2 and pizza_toppings.
 
 ,cte2 AS 
 (   SELECT 
@@ -160,8 +135,8 @@ SELECT
 	customer_orders.customer_id,
 	CASE WHEN exclusions IS NULL AND extras IS NULL THEN pizza_name
 	     WHEN exclusions IS NOT NULL AND extras IS NULL THEN CONCAT(pizza_name, ' - Exclude ', cte1.topping_name)
-		 WHEN exclusions IS NULL AND extras IS NOT NULL THEN CONCAT(pizza_name, ' - Include ', cte2.topping_name)
-		 ELSE CONCAT(pizza_name, ' - Exclude ',cte1.topping_name, ' - Include ',cte2.topping_name)
+	     WHEN exclusions IS NULL AND extras IS NOT NULL THEN CONCAT(pizza_name, ' - Include ', cte2.topping_name)
+	     ELSE CONCAT(pizza_name, ' - Exclude ',cte1.topping_name, ' - Include ',cte2.topping_name)
 	END order_item	
 FROM customer_orders
 INNER JOIN pizza_names USING(pizza_id)
