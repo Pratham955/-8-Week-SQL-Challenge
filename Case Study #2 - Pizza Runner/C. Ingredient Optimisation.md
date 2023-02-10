@@ -154,6 +154,7 @@ ORDER BY 1
  - For example: "Meat Lovers: 2xBacon, Beef, ... , Salami"
 
 ````sql
+-- cte 1 is for extracting the order_id, customer_id, and aggregated topping_name of exclusions by joining t1 and pizza_toppings.
 WITH cte1 AS 
 ( SELECT 
 	order_id,
@@ -164,6 +165,7 @@ WITH cte1 AS
   GROUP BY 1,2
 )
 
+-- cte 2 is for extracting the order_id, customer_id, and aggregated topping_name of extras by joining t2 and pizza_toppings.
 ,cte2 AS 
 ( SELECT 
   	order_id, 
@@ -174,6 +176,7 @@ WITH cte1 AS
   GROUP BY 1,2
 )
 
+-- cte is extracting for pizza_id and aggregated topping_name by joining pizza_recipes_temp and pizza_toppings.
 , cte AS 
 ( SELECT 
 	pizza_id,
@@ -209,15 +212,64 @@ ORDER BY 1
 ````
 
 #### Result set:
+![image](https://user-images.githubusercontent.com/75075887/218166001-1b32ccbc-2386-495d-83aa-06bb928d48e7.png)
 
 
 ### 6. What is the total quantity of each ingredient used in all delivered pizzas sorted by most frequent first?
 
 ````sql
+-- cte 1 is for extracting the order_id, customer_id, and aggregated topping_name of exclusions by joining t1 and pizza_toppings.
+WITH cte1 AS 
+( SELECT 
+	order_id,
+	customer_id,
+	STRING_AGG(DISTINCT topping_name, ', ') AS topping_name
+  FROM t1
+  INNER JOIN pizza_toppings ON t1.sep_exclusions = pizza_toppings.topping_id
+  GROUP BY 1,2
+)
 
+-- cte 2 is for extracting the order_id, customer_id, and aggregated topping_name of extras by joining t2 and pizza_toppings.
+,cte2 AS 
+( SELECT 
+  	order_id, 
+  	customer_id,
+  	STRING_AGG(topping_name, ', ') AS topping_name
+  FROM t2
+  INNER JOIN pizza_toppings ON t2.sep_extras = pizza_toppings.topping_id
+  GROUP BY 1,2
+)
+
+-- cte is extracting for pizza_id and aggregated topping_name by joining pizza_recipes_temp and pizza_toppings.
+, cte AS 
+( SELECT 
+	pizza_id,
+	STRING_AGG(topping_name,', ') AS topping_name
+  FROM pizza_recipes_temp
+  INNER JOIN pizza_toppings ON pizza_recipes_temp.toppings = pizza_toppings.topping_id
+  GROUP BY 1
+)
+
+SELECT 
+	TRIM(unnest(string_to_array(	CASE WHEN exclusions IS NULL AND extras IS NULL THEN cte.topping_name
+		 WHEN exclusions IS NOT NULL AND extras IS NULL THEN REPLACE(cte.topping_name,CONCAT(cte1.topping_name,','),'')
+		 WHEN exclusions IS NULL AND extras IS NOT NULL THEN CONCAT(cte.topping_name,',',cte2.topping_name)
+		 ELSE 
+			CASE WHEN cte1.topping_name LIKE '%,%' THEN CONCAT(REPLACE(REPLACE(cte.topping_name,CONCAT(SPLIT_PART(cte1.topping_name,',',1),','),''),CONCAT(SPLIT_PART(cte1.topping_name,',',2),','),''),',',SPLIT_PART(cte2.topping_name,',',1),',',SPLIT_PART(cte2.topping_name,',',2))
+			ELSE CONCAT(REPLACE(cte.topping_name,CONCAT(cte1.topping_name,','),''),',',SPLIT_PART(cte2.topping_name,',',1),',',SPLIT_PART(cte2.topping_name,',',2))
+			END 
+	 END , ','))) AS topping_name ,
+	COUNT(*) AS frequency
+FROM customer_orders
+INNER JOIN cte USING(pizza_id)
+LEFT JOIN cte1 ON customer_orders.order_id = cte1.order_id AND customer_orders.customer_id = cte1.customer_id
+LEFT JOIN cte2 ON customer_orders.order_id = cte2.order_id AND customer_orders.customer_id = cte2.customer_id
+GROUP BY 1
+ORDER BY 2 DESC
 ````
 
 #### Result set:
+![image](https://user-images.githubusercontent.com/75075887/218171025-698bc62c-83c3-4ec6-a66a-3b85d8961703.png)
 
 
 ***
