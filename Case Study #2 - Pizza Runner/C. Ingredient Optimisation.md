@@ -251,14 +251,15 @@ WITH cte1 AS
 )
 
 SELECT 
-	TRIM(unnest(string_to_array(	CASE WHEN exclusions IS NULL AND extras IS NULL THEN cte.topping_name
-		 WHEN exclusions IS NOT NULL AND extras IS NULL THEN REPLACE(cte.topping_name,CONCAT(cte1.topping_name,','),'')
-		 WHEN exclusions IS NULL AND extras IS NOT NULL THEN CONCAT(cte.topping_name,',',cte2.topping_name)
-		 ELSE 
+	TRIM( unnest( string_to_array(	
+        	CASE WHEN exclusions IS NULL AND extras IS NULL THEN cte.topping_name
+		WHEN exclusions IS NOT NULL AND extras IS NULL THEN REPLACE(cte.topping_name,CONCAT(cte1.topping_name,','),'')
+		WHEN exclusions IS NULL AND extras IS NOT NULL THEN CONCAT(cte.topping_name,',',cte2.topping_name)
+		ELSE 
 			CASE WHEN cte1.topping_name LIKE '%,%' THEN CONCAT(REPLACE(REPLACE(cte.topping_name,CONCAT(SPLIT_PART(cte1.topping_name,',',1),','),''),CONCAT(SPLIT_PART(cte1.topping_name,',',2),','),''),',',SPLIT_PART(cte2.topping_name,',',1),',',SPLIT_PART(cte2.topping_name,',',2))
 			ELSE CONCAT(REPLACE(cte.topping_name,CONCAT(cte1.topping_name,','),''),',',SPLIT_PART(cte2.topping_name,',',1),',',SPLIT_PART(cte2.topping_name,',',2))
 			END 
-	 END , ','))) AS topping_name ,
+		END , ','))) AS topping_name ,
 	COUNT(*) AS frequency
 FROM customer_orders
 INNER JOIN cte USING(pizza_id)
@@ -273,4 +274,4 @@ ORDER BY 2 DESC
 
 
 ***
-Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md) to view the  solution of D. Pricing and Ratings!
+Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/D.%20Pricing%20and%20Ratings.md) to view the  solution of D. Pricing and Ratings!
