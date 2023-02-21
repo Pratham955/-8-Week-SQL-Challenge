@@ -20,9 +20,20 @@ Danny requires our assistance to clean his data and apply some basic calculation
 
 
 ## Key learnings
-- Using window function **DENSE_RANK** along with PARTITION BY and ORDER BY clauses
-- Using **PARTITION BY** with multiple columns
+- Using **to_char()** function to extract the day from the timestamp for grouping
+- Learn about the **corr(x,y)** function to find the relationship between two variables
+- Learn two functions to split a string and produce a column with all string parts, each in a separate row
+  - **unnest(string_to_array(text, delimiter)**: First, the string_to_array(text, delimiter) function splits the string and converts it into a text array by the             specified delimiter. Then unnest() function produces a column of array elements as rows.
+  - **regexp_split_to_table(text, delimiter)**: It directly splits the string into a column of split parts with a given delimiter.
+- Learn about the **string_agg()** function to concatenate a list of strings which is separated by a delimiter
+- Learn two functions to determine the location in the string where the substring is being matched:
+  - **strpos(string, substring)**
+  - **position(substring IN string)**
+- Learn to join multiple **CTEs** and **temporary tables** 
+- Learn to use **aggregate functions** with **CASE statements** and **subquery**
   
+ 
   
+ 
 Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md) to view the solutions of the case study!
 
