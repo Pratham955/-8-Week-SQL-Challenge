@@ -1,5 +1,5 @@
 ## Customer Orders Table
-I am replacing the missing and null (lowercase) values with NULL to maintain data accuracy in the exclusions and extras column.
+I am replacing the missing and null (lowercase) values with NULL to maintain data consistency in the exclusions and extras column.
 ```sql
 UPDATE customer_orders
 SET exclusions = CASE WHEN exclusions IN ('','null') THEN NULL ELSE exclusions END,
