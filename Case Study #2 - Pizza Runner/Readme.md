@@ -40,5 +40,4 @@ Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%2
  
   
  
-Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md) to view the solutions of the case study!
-
+Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/A.%20Pizza%20Metrics.md) to view the solutions of the case study!
