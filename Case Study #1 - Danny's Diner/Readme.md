@@ -8,6 +8,7 @@ View the case study [here](https://8weeksqlchallenge.com/case-study-1/)
 - [Business Task](#business-task)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Key learnings](#key-learnings)
+- [Solutions](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md)
   
 ***
 
@@ -21,6 +22,3 @@ Danny wants to use the data to answer a few simple questions about his customers
 ## Key learnings
 - Using window function **DENSE_RANK** along with PARTITION BY and ORDER BY clauses
 - Using **PARTITION BY** with multiple columns
-  
-  
-Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md) to view the solutions of the case study!
