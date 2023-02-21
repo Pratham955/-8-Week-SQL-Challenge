@@ -7,6 +7,7 @@ View the case study [here](https://8weeksqlchallenge.com/case-study-2/)
 ## 📚 Table of Contents
 - [Business Task](#business-task)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
+- [Data Cleaning](#data-cleaning)
 - [Key learnings](#key-learnings)
   
 ***
@@ -18,6 +19,10 @@ Danny requires our assistance to clean his data and apply some basic calculation
 
 ![image](https://user-images.githubusercontent.com/75075887/216654172-421f7dcb-088a-4120-b136-b0f35925cc8e.png)
 
+## Data Cleaning
+Some data issues, like data inconsistency in format, datatype, and garbage values, are found in the customer_orders and runner_orders tables. 
+
+Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%232%20-%20Pizza%20Runner/Data%20Cleaning.md) to view the data cleaning performed.
 
 ## Key learnings
 - Using **to_char()** function to extract the day from the timestamp for grouping
