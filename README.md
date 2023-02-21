@@ -7,3 +7,4 @@ Each case-study folder contains the following files
 
 - A readme file explaining the problem statement and datasets used
 - Solutions file which contains SQL queries answering the respective challenge questions
+- Data Cleaning file for making data error-free and ready for analysis
