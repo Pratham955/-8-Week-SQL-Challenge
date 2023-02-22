@@ -9,6 +9,7 @@ View the case study [here](https://8weeksqlchallenge.com/case-study-1/)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Key learnings](#key-learnings)
 - [Solutions](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md)
+- [Tableau for Data Visualization](https://public.tableau.com/app/profile/pratham.singh2027/viz/CaseStudy1DannysDiner/1)
   
 ***
 
