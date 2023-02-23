@@ -21,8 +21,8 @@ Danny wants to use the data to answer a few simple questions about his customers
 ![image](https://user-images.githubusercontent.com/81607668/127271130-dca9aedd-4ca9-4ed8-b6ec-1e1920dca4a8.png)
 
 ## Key learnings
-- Using window function **DENSE_RANK** along with PARTITION BY and ORDER BY clauses
-- Using **PARTITION BY** with multiple columns
+- Learn about the **DENSE_RANK** window function.
+- Learn about **INTERVAL** to add days to a date.
 
 
 Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md) to view the solutions of the case study!
