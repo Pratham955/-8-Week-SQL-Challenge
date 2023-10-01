@@ -223,6 +223,12 @@ ORDER BY 1
 #### Result set:
 ![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/69dc9e93-487e-4e34-916c-aad6574df294)
 
+#### Assumption:
+- Before becoming a member, each $1 spent earns 10 points. However, for sushi, each $1 spent earns 20 points.
+- From Day 1 to Day 7 (the first week of membership), each $1 spent for any item earns 20 points.
+- From Day 8 to the last day of January 2021, each $1 spent earns 10 points. However, sushi continues to earn double the points at 20 points per $1 spent.
+
+
 ***
 
 ###  Bonus Questions
@@ -231,20 +237,20 @@ ORDER BY 1
 Create basic data tables that Danny and his team can use to quickly derive insights without needing to join the underlying tables using SQL. Fill Member column as 'N' if the purchase was made before becoming a member and 'Y' if the after is amde after joining the membership.
 
 ```sql
-SELECT
-	customer_id, 
-	order_date,
-	product_name,
-	price,
-	CASE WHEN order_date >= join_date THEN 'Y' ELSE 'N' END AS member
+SELECT 
+    customer_id,
+    order_date,
+    product_name,
+    price,
+    CASE WHEN order_date >= join_date THEN 'Y' ELSE 'N' END AS member
 FROM sales
-LEFT JOIN menu USING(product_id) 					-- LEFT OR INNER JOIN FOR THIS LINE
 LEFT JOIN members USING(customer_id)
-ORDER BY 1,2
+INNER JOIN menu USING(product_id)
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/213493901-5049ee4b-451b-4be6-babd-c23c05a06dde.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/26159b5e-b1ea-4a4c-81f9-d5f99e639ea4)
+
 
 ***
 
@@ -252,28 +258,21 @@ ORDER BY 1,2
 Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 
 ```sql
-WITH cte AS (
-	SELECT
-		customer_id, 
-		order_date,
-		product_name,
-		price,
-		CASE WHEN order_date >= join_date THEN 'Y' ELSE 'N' END AS member	
-	FROM sales
-	LEFT JOIN menu USING(product_id) 					-- LEFT OR INNER JOIN FOR THIS LINE
-	LEFT JOIN members USING(customer_id)
-	ORDER BY 1,2
-)
-
 SELECT 
-	*, 
-	CASE WHEN member = 'Y' THEN RANK () OVER (PARTITION BY customer_id,member ORDER BY order_date) 
-	END AS rank
-FROM cte
+    customer_id,
+    order_date,
+    product_name,
+    price,
+    CASE WHEN order_date >= join_date THEN 'Y' ELSE 'N' END AS member,
+    CASE WHEN order_date >= join_date THEN DENSE_RANK() OVER (PARTITION BY customer_id,order_date >= join_date ORDER BY order_date)
+    ELSE NULL END AS ranking
+FROM sales
+LEFT JOIN members USING(customer_id)
+INNER JOIN menu USING(product_id)
 ``` 
 
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/213494964-5ff8a846-7e68-4910-be0a-4518f648f975.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/306ca2be-14a4-4d47-803d-df7c3be1497d)
 
 
 ***
