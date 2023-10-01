@@ -22,7 +22,6 @@ Danny wants to use the data to answer a few simple questions about his customers
 
 ## Key learnings
 - Learn about the **DENSE_RANK** window function.
-- Learn about **INTERVAL** to add days to a date.
 
 
 Click [here](https://github.com/Pratham955/8-Week-SQL-Challenge/blob/main/Case%20Study%20%231%20-%20Danny's%20Diner/Solutions.md) to view the solutions of the case study!
