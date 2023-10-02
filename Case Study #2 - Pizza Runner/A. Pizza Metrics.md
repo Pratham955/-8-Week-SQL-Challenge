@@ -24,20 +24,20 @@ FROM customer_orders
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216674031-f798d28b-3135-4060-ac3f-139e8aec4c94.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/15643508-29ce-402a-bef7-03947b825f9a)
 
 ***
 
 ###  2. How many unique customer orders were made?
 
 ```sql
-SELECT 
-  COUNT(DISTINCT order_id) AS unique_customer_order
-FROM customer_orders_temp;
+SELECT
+  COUNT(*) AS unique_customer_order
+FROM runner_orders
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216674490-da862e47-55f4-4f93-9aaa-d411988b125d.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/f3027fc8-9749-4912-a4b8-64c26744b802)
 
 ***
 
@@ -45,16 +45,15 @@ FROM customer_orders_temp;
 
 ```sql
 SELECT 
-	runner_id,
-	COUNT(*) AS successful_orders
+  runner_id,
+  COUNT(*) AS successful_orders
 FROM runner_orders
-WHERE distance IS NOT NULL
+WHERE cancellation IS NULL
 GROUP BY 1
-ORDER BY 1
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216674983-69510b99-8dfd-479d-8ea3-8b1658d5d47b.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/bffa6abb-a7ac-4fcf-837c-21f15a17f98a)
 
 ***
 
@@ -62,18 +61,18 @@ ORDER BY 1
 
 ```sql
 SELECT 
-	pizza_name,
-	COUNT(*) AS pizzas_delivered 
-FROM customer_orders
+  pizza_name,
+  COUNT(*) AS pizzas_delivered 
+FROM runner_orders
+INNER JOIN customer_orders USING(order_id)
 INNER JOIN pizza_names USING(pizza_id)
-INNER JOIN runner_orders USING(order_id)
-WHERE distance IS NOT NULL
+WHERE cancellation IS NULL
 GROUP BY 1
-ORDER BY 1
+
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216675408-fa798f55-1b6c-47c3-9a79-ffc3f1d6fe23.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/883d6338-12c9-4ea5-a3e4-d0c8b4311034)
 
 ***
 
@@ -81,9 +80,9 @@ ORDER BY 1
 
 ```sql
 SELECT 
-	customer_id,
-	pizza_name,
-	COUNT(*) AS pizza_ordered
+  customer_id,
+  pizza_name,
+  COUNT(*) AS pizza_ordered
 FROM customer_orders
 INNER JOIN pizza_names USING(pizza_id)
 GROUP BY 1,2
@@ -91,7 +90,7 @@ ORDER BY 1
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216675743-cc95d4c2-62c8-44ee-aac2-97b19a92e666.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/b1c2ea00-73c9-4210-b1eb-0d52ce38cf32)
 
 ***
 
@@ -99,17 +98,17 @@ ORDER BY 1
 
 ```sql
 SELECT 
-	COUNT(*) AS max_num_pizza_order
-FROM customer_orders
+  COUNT(*) AS max_num_pizza_order 
+FROM customer_orders 
 INNER JOIN runner_orders USING(order_id)
-WHERE distance IS NOT NULL
-GROUP BY order_id
+WHERE cancellation IS NULL
+GROUP BY customer_id
 ORDER BY 1 DESC
 LIMIT 1
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216676722-0832bf1b-3d1b-4a3b-ade4-04f6f69d8879.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/67ca7cb8-413a-4d42-a781-de72ba3bd5af)
 
 ***
 
@@ -117,18 +116,19 @@ LIMIT 1
 
 ```sql
 SELECT 
-	customer_id,
-	COUNT(CASE WHEN exclusions IS NOT NULL OR extras IS NOT NULL THEN 1 END) AS atleast_one_change,
-	COUNT(CASE WHEN exclusions IS NULL AND extras IS NULL THEN 1 END) AS no_change
+  customer_id,
+  COUNT(CASE WHEN exclusions IS NOT NULL OR extras IS NOT NULL THEN 1 END) AS atleast_one_change,
+  COUNT(CASE WHEN exclusions IS NULL AND extras IS NULL THEN 1 END) AS no_change
 FROM customer_orders
 INNER JOIN runner_orders USING(order_id)
-WHERE distance IS NOT NULL
+WHERE cancellation IS NULL
 GROUP BY 1
 ORDER BY 1
 ``` 
 
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216677940-3a75b199-91fa-4e0b-ab67-1b64300f1423.png)6
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/fb368221-e857-4169-8872-32ba39214b9a)
+
 
 ***
 
@@ -136,14 +136,14 @@ ORDER BY 1
 
 ```sql
 SELECT 
-	COUNT(*) AS both_exclusions_extras
-FROM customer_orders
+  COUNT(CASE WHEN exclusions IS NOT NULL AND extras IS NOT NULL THEN 1 END) AS both_exclusions_extras
+FROM customer_orders 
 INNER JOIN runner_orders USING(order_id)
-WHERE distance IS NOT NULL AND exclusions IS NOT NULL AND extras IS NOT NULL
+WHERE cancellation IS NULL
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216679113-10a03411-c89d-43a1-9c13-72e1426a6f4e.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/f544fcad-4232-40aa-8d24-67b867f97e66)
 
 ***
 
@@ -151,15 +151,15 @@ WHERE distance IS NOT NULL AND exclusions IS NOT NULL AND extras IS NOT NULL
 
 ```sql
 SELECT 
-	EXTRACT(HOUR FROM order_time) AS hour_of_day,
-	COUNT(*) AS pizza_count
-FROM customer_orders
+  HOUR(order_time) AS hour_of_day,
+  COUNT(*) AS pizza_count
+FROM customer_orders 
 GROUP BY 1
-ORDER BY 1
+ORDER BY 1 
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216679926-bd13c8e1-c69a-4847-acac-994fb09d82af.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/4f300646-9f87-4b61-b817-e2a62c884bb5)
 
 ***
 
@@ -167,15 +167,15 @@ ORDER BY 1
 
 ```sql
 SELECT 
-	TO_CHAR(order_time, 'Day') AS day_of_week,
-	COUNT(*) AS pizzas_ordered	 
-FROM customer_orders
+  DAYNAME(order_time) AS day_of_week,
+  COUNT(*) AS pizzas_ordered	 
+FROM customer_orders 
 GROUP BY 1
 ORDER BY 2 DESC
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/75075887/216683908-393b2ece-d616-4693-836a-e9c133a1aadc.png)
+![image](https://github.com/Pratham955/8-Week-SQL-Challenge/assets/75075887/0d5a4c9f-e4d5-4b46-a302-f012435669ca)
 
 ***
 
