@@ -13,7 +13,7 @@ SET exclusions = CASE WHEN exclusions IN ('','null') THEN NULL ELSE exclusions E
 ```sql
 UPDATE runner_orders
 SET pickup_time = CASE WHEN pickup_time = 'null' THEN NULL ELSE pickup_time END,
-    distance = CASE WHEN distance LIKE '%km' THEN TRIM(REPLACE(distance, 'km', '')) WHEN distance = 'null' THEN NULL ELSE distance END,
+    distance = CASE WHEN distance LIKE '%km' THEN TRIM('km' from distance) WHEN distance = 'null' THEN NULL ELSE distance END,
     duration = CASE WHEN duration LIKE '%min%' THEN TRIM(LEFT(duration,2)) WHEN duration = 'null' THEN NULL ELSE duration END,
     cancellation = CASE WHEN cancellation IN ('','null') THEN NULL ELSE cancellation END
 ```
@@ -25,7 +25,7 @@ ALTER TABLE runner_orders
 MODIFY COLUMN pickup_time TIMESTAMP;
 
 ALTER TABLE runner_orders
-MODIFY COLUMN distance NUMERIC;
+MODIFY COLUMN distance FLOAT;
 
 ALTER TABLE runner_orders
 MODIFY COLUMN duration INT;
